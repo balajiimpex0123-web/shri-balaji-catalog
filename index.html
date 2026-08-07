@@ -170,6 +170,13 @@ header{
   color:var(--amber);letter-spacing:0.3px;text-transform:uppercase;
   margin-top:2px;
 }
+.video-link{
+  display:inline-block;font-family:'Inter',sans-serif;font-weight:600;
+  font-size:12px;color:var(--ink);text-decoration:none;
+  border:1px solid var(--line);border-radius:999px;
+  padding:5px 12px;margin-top:8px;width:fit-content;
+}
+.video-link:hover{background:var(--paper-deep);}
 .enquire-row{display:flex;gap:8px;margin-top:10px;}
 .enquire{
   flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
@@ -209,6 +216,7 @@ header{
       </div>
       <div class="header-actions">
         <a class="btn btn-solid" id="waHeaderBtn" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
+        <a class="btn" id="igHeaderBtn" href="#" target="_blank" rel="noopener">Instagram</a>
         <button class="btn" onclick="window.print()">Download catalogue (PDF)</button>
       </div>
     </div>
@@ -235,7 +243,8 @@ header{
 const CONFIG = {
   businessName: "Shri Balaji Traders",
   tagline: "Importer & wholesaler · loose & full carton both available",
-  whatsappNumber: "919958911562" // country code + number, no + or spaces
+  whatsappNumber: "919958911562", // country code + number, no + or spaces
+  instagramUrl: "https://www.instagram.com/sbts_officialstore/"
 };
 
 /* ============================================================
@@ -304,6 +313,7 @@ function waLink(text){
 }
 document.getElementById("waHeaderBtn").href =
   waLink(`Hi ${CONFIG.businessName}, I'd like to know more about your products.`);
+document.getElementById("igHeaderBtn").href = CONFIG.instagramUrl;
 
 function buildFilters(){
   const stockRow = document.getElementById("stockFilters");
@@ -358,6 +368,9 @@ function render(){
     const looseBtn = p.looseAvailable
       ? `<a class="enquire loose" href="${waLink(looseMsg)}" target="_blank" rel="noopener">Loose rate</a>`
       : "";
+    const videoLink = p.videoUrl
+      ? `<a class="video-link" href="${p.videoUrl}" target="_blank" rel="noopener">▶ Watch video</a>`
+      : "";
     return `
     <div class="card">
       <div class="card-img">
@@ -372,6 +385,7 @@ function render(){
           <div>MOQ<b>1 carton</b></div>
         </div>
         <p class="sale-note">${p.looseAvailable ? "Available loose &amp; carton · rates differ" : "Full carton only"}</p>
+        ${videoLink}
         <div class="enquire-row">
           <a class="enquire" href="${waLink(cartonMsg)}" target="_blank" rel="noopener">Carton rate</a>
           ${looseBtn}
