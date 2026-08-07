@@ -53,6 +53,11 @@ header{
   display:flex;justify-content:space-between;align-items:flex-start;
   flex-wrap:wrap;gap:16px;margin-bottom:22px;
 }
+.brand-left{display:flex;align-items:center;gap:14px;}
+.brand-logo{
+  width:56px;height:56px;object-fit:contain;flex-shrink:0;
+  border-radius:8px;
+}
 .brand-name{
   font-family:'Oswald',sans-serif;
   font-weight:700;
@@ -195,9 +200,12 @@ header{
 <header>
   <div class="header-inner">
     <div class="brand-row">
-      <div>
-        <p class="brand-name" id="bizName">Shri Balaji Traders</p>
-        <p class="brand-tag" id="bizTag">Importer &amp; wholesaler · loose &amp; full carton both available</p>
+      <div class="brand-left">
+        <img src="logo.png" alt="Business logo" class="brand-logo">
+        <div>
+          <p class="brand-name" id="bizName">Shri Balaji Traders</p>
+          <p class="brand-tag" id="bizTag">Importer &amp; wholesaler · loose &amp; full carton both available</p>
+        </div>
       </div>
       <div class="header-actions">
         <a class="btn btn-solid" id="waHeaderBtn" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
