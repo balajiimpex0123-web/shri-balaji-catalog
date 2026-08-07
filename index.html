@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shri Balaji Traders — Wholesale Catalogue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   EDIT ME — business details, categories, products.
+   Everything the shop owner needs to change lives in this file:
+   1. CONFIG object (below in <script>) for name/phone/tagline
+   2. PRODUCTS array (below in <script>) for stock items
+   ============================================================ */
+
+:root{
+  --paper:#F1E9D8;
+  --paper-deep:#E9DFC7;
+  --card:#FFFCF5;
+  --ink:#1E2A38;
+  --ink-soft:#5B6B7A;
+  --line:#C9BB98;
+  --green:#2F6B4F;
+  --green-deep:#204C38;
+  --amber:#B9791F;
+  --red:#B23A2E;
+  --radius:10px;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 64px;}
+
+/* ---------- header / manifest strip ---------- */
+header{
+  padding:36px 20px 0;
+  background:
+    repeating-linear-gradient(135deg, rgba(30,42,56,0.035) 0 2px, transparent 2px 10px),
+    var(--paper);
+  border-bottom:1px dashed var(--line);
+}
+.header-inner{max-width:1080px;margin:0 auto;}
+.brand-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  flex-wrap:wrap;gap:16px;margin-bottom:22px;
+}
+.brand-name{
+  font-family:'Oswald',sans-serif;
+  font-weight:700;
+  font-size:clamp(28px,4vw,44px);
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  margin:0;
+  line-height:1.05;
+}
+.brand-tag{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;
+  color:var(--ink-soft);
+  letter-spacing:0.5px;
+  margin:8px 0 0;
+  text-transform:uppercase;
+}
+.header-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:'Inter',sans-serif;font-weight:600;font-size:13.5px;
+  padding:11px 18px;border-radius:var(--radius);
+  border:1.5px solid var(--ink);
+  background:transparent;color:var(--ink);
+  cursor:pointer;text-decoration:none;white-space:nowrap;
+}
+.btn-solid{background:var(--green);border-color:var(--green-deep);color:#FFFCF5;}
+.btn-solid:hover{background:var(--green-deep);}
+.btn:hover{background:var(--paper-deep);}
+
+.manifest{
+  display:flex;gap:24px;flex-wrap:wrap;
+  padding:14px 0 20px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;color:var(--ink-soft);
+}
+.manifest b{color:var(--ink);font-weight:600;}
+.manifest span::before{content:"— ";color:var(--line);}
+.manifest span:first-child::before{content:"";}
+
+/* ---------- filters ---------- */
+.filters{padding:22px 0 8px;}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.chip{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;letter-spacing:0.3px;
+  padding:7px 14px;border-radius:999px;
+  border:1px solid var(--line);
+  background:var(--card);color:var(--ink-soft);
+  cursor:pointer;text-transform:uppercase;
+}
+.chip.active{background:var(--ink);border-color:var(--ink);color:var(--card);}
+#search{
+  width:100%;max-width:320px;
+  font-family:'Inter',sans-serif;font-size:14px;
+  padding:10px 14px;margin-top:6px;
+  border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--card);color:var(--ink);
+}
+#search:focus{outline:2px solid var(--ink);outline-offset:1px;}
+
+/* ---------- product grid ---------- */
+.count-line{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;
+  color:var(--ink-soft);margin:18px 0 14px;
+}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:18px;
+}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.card-img{
+  position:relative;aspect-ratio:1/1;background:var(--paper-deep);
+  overflow:hidden;
+}
+.card-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.stamp{
+  position:absolute;top:10px;right:-6px;
+  font-family:'IBM Plex Mono',monospace;font-weight:600;
+  font-size:10.5px;letter-spacing:1px;text-transform:uppercase;
+  padding:4px 12px;border:2px solid currentColor;border-radius:3px;
+  transform:rotate(-9deg);
+  background:rgba(255,252,245,0.88);
+}
+.stamp.in_stock{color:var(--green-deep);}
+.stamp.coming_soon{color:var(--amber);}
+.stamp.out_of_stock{color:var(--red);}
+
+.card-body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:6px;flex:1;}
+.sku-row{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);
+  display:flex;justify-content:space-between;
+}
+.p-name{
+  font-family:'Oswald',sans-serif;font-weight:600;font-size:16.5px;
+  text-transform:uppercase;line-height:1.2;margin:2px 0 4px;letter-spacing:0.2px;
+}
+.moq-box{
+  display:flex;gap:14px;
+  font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+  color:var(--ink-soft);border-top:1px dashed var(--line);
+  padding-top:8px;margin-top:2px;
+}
+.moq-box b{display:block;color:var(--ink);font-size:13px;font-weight:600;}
+.enquire{
+  margin-top:10px;display:flex;align-items:center;justify-content:center;gap:7px;
+  font-family:'Inter',sans-serif;font-weight:600;font-size:13px;
+  padding:10px;border-radius:var(--radius);
+  background:var(--green);color:#FFFCF5;text-decoration:none;
+}
+.enquire:hover{background:var(--green-deep);}
+
+.empty{
+  text-align:center;padding:60px 20px;color:var(--ink-soft);
+  font-family:'IBM Plex Mono',monospace;font-size:13px;
+}
+
+/* ---------- print ---------- */
+@media print{
+  .filters,.header-actions,.enquire,#search{display:none !important;}
+  body{background:#fff;}
+  .grid{grid-template-columns:repeat(3,1fr);}
+  .card{break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand-row">
+      <div>
+        <p class="brand-name" id="bizName">Shri Balaji Traders</p>
+        <p class="brand-tag" id="bizTag">Importer &amp; wholesaler · full cartons only, no loose pieces</p>
+      </div>
+      <div class="header-actions">
+        <a class="btn btn-solid" id="waHeaderBtn" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
+        <button class="btn" onclick="window.print()">Download catalogue (PDF)</button>
+      </div>
+    </div>
+    <div class="manifest" id="manifestLine"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="filters">
+    <div class="filter-row" id="stockFilters"></div>
+    <div class="filter-row" id="catFilters"></div>
+    <input id="search" type="text" placeholder="Search products or SKU…">
+  </div>
+
+  <p class="count-line" id="countLine"></p>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="emptyState" style="display:none;">No products match these filters.</div>
+</div>
+
+<script>
+/* ============================================================
+   1. CONFIG — edit business name, WhatsApp number, tagline
+   ============================================================ */
+const CONFIG = {
+  businessName: "Shri Balaji Traders",
+  tagline: "Importer & wholesaler · full cartons only, no loose pieces",
+  whatsappNumber: "919958911562" // country code + number, no + or spaces
+};
+
+/* ============================================================
+   2. PRODUCTS — add/remove/edit items here.
+   stock: "in_stock" | "coming_soon" | "out_of_stock"
+   image: any image URL (replace placeholders with real photos)
+   ============================================================ */
+const PRODUCTS = [
+  { sku:"SB-0001", name:"14 in 1 Vegetable Cutter", category:"Kitchen", cartonQty:24, stock:"in_stock",
+    image:"https://placehold.co/500x500/E9DFC7/1E2A38?font=oswald&text=Vegetable+Cutter" },
+  { sku:"SB-0002", name:"16 in 1 Manicure Kit", category:"Beauty", cartonQty:150, stock:"in_stock",
+    image:"https://placehold.co/500x500/E9DFC7/1E2A38?font=oswald&text=Manicure+Kit" },
+  { sku:"SB-0003", name:"5 in 1 Laundry Pods (8g)", category:"Cleaning", cartonQty:1500, stock:"in_stock",
+    image:"https://placehold.co/500x500/E9DFC7/1E2A38?font=oswald&text=Laundry+Pods" },
+  { sku:"SB-0004", name:"Bathroom Wall Shelf", category:"Home", cartonQty:50, stock:"coming_soon",
+    image:"https://placehold.co/500x500/E9DFC7/1E2A38?font=oswald&text=Wall+Shelf" },
+  { sku:"SB-0005", name:"145 Pcs Colour Set", category:"Stationery", cartonQty:10, stock:"in_stock",
+    image:"https://placehold.co/500x500/E9DFC7/1E2A38?font=oswald&text=Colour+Set" },
+  { sku:"SB-0006", name:"Foldable Utility Toolkit", category:"Tools", cartonQty:36, stock:"out_of_stock",
+    image:"https://placehold.co/500x500/E9DFC7/1E2A38?font=oswald&text=Toolkit" },
+  { sku:"SB-0007", name:"Sunglasses Organiser (5 slot)", category:"Accessories", cartonQty:50, stock:"in_stock",
+    image:"https://placehold.co/500x500/E9DFC7/1E2A38?font=oswald&text=Sunglasses+Organiser" },
+  { sku:"SB-0008", name:"Kids Building Blocks Set", category:"Toys", cartonQty:40, stock:"in_stock",
+    image:"https://placehold.co/500x500/E9DFC7/1E2A38?font=oswald&text=Building+Blocks" }
+];
+
+/* ============================================================
+   App logic — no edits usually needed below this line
+   ============================================================ */
+const STOCK_LABELS = { in_stock:"In stock", coming_soon:"Coming soon", out_of_stock:"Out of stock" };
+let activeStock = "all";
+let activeCategory = "all";
+let searchTerm = "";
+
+document.getElementById("bizName").textContent = CONFIG.businessName;
+document.getElementById("bizTag").textContent = CONFIG.tagline;
+
+function waLink(text){
+  return `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`;
+}
+document.getElementById("waHeaderBtn").href =
+  waLink(`Hi ${CONFIG.businessName}, I'd like to know more about your products.`);
+
+function buildFilters(){
+  const stockRow = document.getElementById("stockFilters");
+  const stockOptions = [["all","All stock"],["in_stock","In stock"],["coming_soon","Coming soon"],["out_of_stock","Out of stock"]];
+  stockRow.innerHTML = stockOptions.map(([val,label]) =>
+    `<button class="chip ${val==='all'?'active':''}" data-stock="${val}">${label}</button>`).join("");
+  stockRow.addEventListener("click", e => {
+    const btn = e.target.closest(".chip"); if(!btn) return;
+    activeStock = btn.dataset.stock;
+    [...stockRow.children].forEach(c => c.classList.toggle("active", c === btn));
+    render();
+  });
+
+  const cats = ["all", ...new Set(PRODUCTS.map(p => p.category))];
+  const catRow = document.getElementById("catFilters");
+  catRow.innerHTML = cats.map(c =>
+    `<button class="chip ${c==='all'?'active':''}" data-cat="${c}">${c==='all'?'All categories':c}</button>`).join("");
+  catRow.addEventListener("click", e => {
+    const btn = e.target.closest(".chip"); if(!btn) return;
+    activeCategory = btn.dataset.cat;
+    [...catRow.children].forEach(c => c.classList.toggle("active", c === btn));
+    render();
+  });
+
+  document.getElementById("search").addEventListener("input", e => {
+    searchTerm = e.target.value.trim().toLowerCase();
+    render();
+  });
+}
+
+function render(){
+  const filtered = PRODUCTS.filter(p => {
+    if (activeStock !== "all" && p.stock !== activeStock) return false;
+    if (activeCategory !== "all" && p.category !== activeCategory) return false;
+    if (searchTerm && !(p.name.toLowerCase().includes(searchTerm) || p.sku.toLowerCase().includes(searchTerm))) return false;
+    return true;
+  });
+
+  document.getElementById("countLine").textContent = `${filtered.length} of ${PRODUCTS.length} products`;
+  const grid = document.getElementById("grid");
+  const empty = document.getElementById("emptyState");
+
+  if (filtered.length === 0){
+    grid.innerHTML = ""; empty.style.display = "block"; return;
+  }
+  empty.style.display = "none";
+
+  grid.innerHTML = filtered.map(p => {
+    const msg = `Hi ${CONFIG.businessName},\nI'm interested in ${p.name} (${p.sku}).\nI'd like ${p.cartonQty} pcs (1 carton).\n\nPlease share details and rates.`;
+    return `
+    <div class="card">
+      <div class="card-img">
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        <span class="stamp ${p.stock}">${STOCK_LABELS[p.stock]}</span>
+      </div>
+      <div class="card-body">
+        <div class="sku-row"><span>${p.sku}</span><span>${p.category}</span></div>
+        <p class="p-name">${p.name}</p>
+        <div class="moq-box">
+          <div>Carton<b>${p.cartonQty} pcs</b></div>
+          <div>MOQ<b>1 carton</b></div>
+        </div>
+        <a class="enquire" href="${waLink(msg)}" target="_blank" rel="noopener">WhatsApp enquiry</a>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function buildManifest(){
+  const inStock = PRODUCTS.filter(p => p.stock === "in_stock").length;
+  const comingSoon = PRODUCTS.filter(p => p.stock === "coming_soon").length;
+  document.getElementById("manifestLine").innerHTML =
+    `<span><b>${PRODUCTS.length}</b> products</span>
+     <span><b>${inStock}</b> in stock</span>
+     <span><b>${comingSoon}</b> coming soon</span>
+     <span>Enquiries via WhatsApp only</span>`;
+}
+
+buildFilters();
+buildManifest();
+render();
+</script>
+</body>
+</html>
