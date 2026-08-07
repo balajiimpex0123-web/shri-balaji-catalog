@@ -265,7 +265,27 @@ const PRODUCTS = [
   { sku:"SB-0010", name:"Capsule Umbrella Small", category:"Home Improvement", cartonQty:60, stock:"in_stock", looseAvailable:true,
     image:"capsule-umbrella-small.jpg" },
   { sku:"SB-0011", name:"6 Diya Urli", category:"Diwali Items", cartonQty:50, stock:"in_stock", looseAvailable:true,
-    image:"6-diya-urli.jpg" }
+    image:"6-diya-urli.jpg" },
+  { sku:"SB-0012", name:"Bottle Cleaning Brush", category:"Home Improvement", cartonQty:20, stock:"in_stock", looseAvailable:true,
+    image:"bottle-cleaning-brush.jpg" },
+  { sku:"SB-0013", name:"Cloth Clip", category:"Home Improvement", cartonQty:50, unit:"dozen", stock:"in_stock", looseAvailable:true,
+    image:"cloth-clip.jpg" },
+  { sku:"SB-0014", name:"Round Cloth Clip", category:"Home Improvement", cartonQty:50, unit:"dozen", stock:"in_stock", looseAvailable:true,
+    image:"round-cloth-clip.jpg" },
+  { sku:"SB-0015", name:"Bath Belt", category:"Bath Accessories", cartonQty:100, stock:"in_stock", looseAvailable:true,
+    image:"bath-belt.jpg" },
+  { sku:"SB-0016", name:"Round Cloth Brush", category:"Home Improvement", cartonQty:10, unit:"dozen", stock:"in_stock", looseAvailable:true,
+    image:"round-cloth-brush.jpg" },
+  { sku:"SB-0017", name:"Chinese Cloth Brush", category:"Home Improvement", cartonQty:100, stock:"in_stock", looseAvailable:true,
+    image:"chinese-cloth-brush.jpg" },
+  { sku:"SB-0018", name:"Wooden Cloth Brush", category:"Home Improvement", cartonQty:50, stock:"in_stock", looseAvailable:true,
+    image:"wooden-cloth-brush.jpg" },
+  { sku:"SB-0019", name:"YO-YO Sponge Wipes", category:"Home Improvement", cartonQty:100, unit:"packets", stock:"in_stock", looseAvailable:true,
+    image:"yo-yo-wipes.jpg" },
+  { sku:"SB-0020", name:"Silicone Golf Toilet Brush", category:"Home Improvement", cartonQty:200, stock:"coming_soon", looseAvailable:true,
+    image:"silicone-golf-toilet-brush.jpg" },
+  { sku:"SB-0021", name:"Kitchen Towel", category:"Home Improvement", cartonQty:50, stock:"in_stock", looseAvailable:true,
+    image:"kitchen-towel.jpg" }
 ];
 
 /* ============================================================
@@ -332,7 +352,8 @@ function render(){
   empty.style.display = "none";
 
   grid.innerHTML = filtered.map(p => {
-    const cartonMsg = `Hi ${CONFIG.businessName},\nI'm interested in ${p.name} (${p.sku}).\nI'd like the FULL CARTON rate (${p.cartonQty} pcs/ctn).\n\nPlease share rate and availability.`;
+    const unit = p.unit || "pcs";
+    const cartonMsg = `Hi ${CONFIG.businessName},\nI'm interested in ${p.name} (${p.sku}).\nI'd like the FULL CARTON rate (${p.cartonQty} ${unit}/ctn).\n\nPlease share rate and availability.`;
     const looseMsg = `Hi ${CONFIG.businessName},\nI'm interested in ${p.name} (${p.sku}).\nI'd like the LOOSE (per piece) rate.\n\nPlease share rate and availability.`;
     const looseBtn = p.looseAvailable
       ? `<a class="enquire loose" href="${waLink(looseMsg)}" target="_blank" rel="noopener">Loose rate</a>`
@@ -347,7 +368,7 @@ function render(){
         <div class="sku-row"><span>${p.sku}</span><span>${p.category}</span></div>
         <p class="p-name">${p.name}</p>
         <div class="moq-box">
-          <div>Carton<b>${p.cartonQty} pcs</b></div>
+          <div>Carton<b>${p.cartonQty} ${unit}</b></div>
           <div>MOQ<b>1 carton</b></div>
         </div>
         <p class="sale-note">${p.looseAvailable ? "Available loose &amp; carton · rates differ" : "Full carton only"}</p>
