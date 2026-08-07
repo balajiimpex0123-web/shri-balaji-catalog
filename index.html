@@ -320,7 +320,37 @@ const PRODUCTS = [
   { sku:"SB-0033", name:"10.5\" Chinese Scissor", category:"Stationery", cartonQty:10, stock:"in_stock", looseAvailable:true,
     image:"chinese-scissor-10-5.jpg" },
   { sku:"SB-0034", name:"10\" Brass Scissor", category:"Stationery", cartonQty:12, stock:"in_stock", looseAvailable:true,
-    image:"brass-scissor-10.jpg" }
+    image:"brass-scissor-10.jpg" },
+  { sku:"SB-0035", name:"Ear Fruit Teether", category:"Toys", cartonQty:30, stock:"in_stock", looseAvailable:true, cartonAvailable:false,
+    image:"ear-fruit-teether.jpg" },
+  { sku:"SB-0036", name:"Baby Pacifier-1", category:"Toys", cartonQty:24, stock:"in_stock", looseAvailable:true,
+    image:"baby-pacifier-1.jpg" },
+  { sku:"SB-0037", name:"Baby Pacifier-2", category:"Toys", cartonQty:24, stock:"in_stock", looseAvailable:true,
+    image:"baby-pacifier-2.jpg" },
+  { sku:"SB-0038", name:"Smily Knee Pad", category:"Toys", cartonQty:300, unit:"pairs", stock:"in_stock", looseAvailable:true,
+    image:"smily-knee-pad.jpg" },
+  { sku:"SB-0039", name:"Baby Knee Pad", category:"Toys", cartonQty:400, unit:"pairs", stock:"in_stock", looseAvailable:true,
+    image:"baby-knee-pad.jpg" },
+  { sku:"SB-0040", name:"Bath Brush", category:"Bath Accessories", cartonQty:100, stock:"in_stock", looseAvailable:true,
+    image:"bath-brush.jpg", videoUrl:"https://www.instagram.com/reel/DbHgyS8Plok/" },
+  { sku:"SB-0041", name:"Nail Clipper with Magnifier", category:"Toys", cartonQty:24, stock:"in_stock", looseAvailable:true,
+    image:"nail-clipper-magnifier.jpg" },
+  { sku:"SB-0042", name:"Medicine Drop", category:"Toys", cartonQty:100, stock:"in_stock", looseAvailable:true, cartonAvailable:false,
+    image:"medicine-drop.jpg" },
+  { sku:"SB-0043", name:"Cloth Line with Clips", category:"Home Improvement", cartonQty:100, stock:"in_stock", looseAvailable:true,
+    image:"cloth-line-with-clips.jpg" },
+  { sku:"SB-0044", name:"Colourful Carpet Brush", category:"Home Improvement", cartonQty:30, stock:"in_stock", looseAvailable:true,
+    image:"colourful-carpet-brush.jpg" },
+  { sku:"SB-0045", name:"Microfiber Cloth 250 GSM", category:"Cleaning", cartonQty:400, stock:"in_stock", looseAvailable:true,
+    image:"microfiber-cloth-250gsm.jpg" },
+  { sku:"SB-0046", name:"Baby Steel Feeding Bottle", category:"Toys", cartonQty:30, stock:"in_stock", looseAvailable:true,
+    image:"baby-steel-feeding-bottle.jpg" },
+  { sku:"SB-0047", name:"Baby Finger Toothbrush", category:"Toys", cartonQty:100, stock:"in_stock", looseAvailable:true,
+    image:"baby-finger-toothbrush.jpg" },
+  { sku:"SB-0048", name:"Grey Carpet Brush", category:"Home Improvement", cartonQty:30, stock:"in_stock", looseAvailable:true,
+    image:"grey-carpet-brush.jpg" },
+  { sku:"SB-0049", name:"Banana Toothbrush", category:"Toys", cartonQty:50, stock:"in_stock", looseAvailable:true,
+    image:"banana-toothbrush.jpg" }
 ];
 
 /* ============================================================
@@ -389,11 +419,24 @@ function render(){
 
   grid.innerHTML = filtered.map(p => {
     const unit = p.unit || "pcs";
+    const cartonOk = p.cartonAvailable !== false;
     const cartonMsg = `Hi ${CONFIG.businessName},\nI'm interested in ${p.name} (${p.sku}).\nI'd like the FULL CARTON rate (${p.cartonQty} ${unit}/ctn).\n\nPlease share rate and availability.`;
     const looseMsg = `Hi ${CONFIG.businessName},\nI'm interested in ${p.name} (${p.sku}).\nI'd like the LOOSE (per piece) rate.\n\nPlease share rate and availability.`;
     const looseBtn = p.looseAvailable
       ? `<a class="enquire loose" href="${waLink(looseMsg)}" target="_blank" rel="noopener">Loose rate</a>`
       : "";
+    const cartonBtn = cartonOk
+      ? `<a class="enquire" href="${waLink(cartonMsg)}" target="_blank" rel="noopener">Carton rate</a>`
+      : "";
+    const moqBox = cartonOk
+      ? `<div class="moq-box">
+          <div>Carton<b>${p.cartonQty} ${unit}</b></div>
+          <div>MOQ<b>1 carton</b></div>
+        </div>`
+      : `<div class="moq-box"><div>Pack size<b>${p.cartonQty} ${unit}</b></div></div>`;
+    const saleNote = !cartonOk ? "Loose only · no full carton"
+      : p.looseAvailable ? "Available loose &amp; carton · rates differ"
+      : "Full carton only";
     const videoLink = p.videoUrl
       ? `<a class="video-link" href="${p.videoUrl}" target="_blank" rel="noopener">▶ Watch video</a>`
       : "";
@@ -406,14 +449,11 @@ function render(){
       <div class="card-body">
         <div class="sku-row"><span>${p.sku}</span><span>${p.category}</span></div>
         <p class="p-name">${p.name}</p>
-        <div class="moq-box">
-          <div>Carton<b>${p.cartonQty} ${unit}</b></div>
-          <div>MOQ<b>1 carton</b></div>
-        </div>
-        <p class="sale-note">${p.looseAvailable ? "Available loose &amp; carton · rates differ" : "Full carton only"}</p>
+        ${moqBox}
+        <p class="sale-note">${saleNote}</p>
         ${videoLink}
         <div class="enquire-row">
-          <a class="enquire" href="${waLink(cartonMsg)}" target="_blank" rel="noopener">Carton rate</a>
+          ${cartonBtn}
           ${looseBtn}
         </div>
       </div>
