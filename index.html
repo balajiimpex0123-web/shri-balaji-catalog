@@ -148,6 +148,7 @@ header{
 .stamp.in_stock{color:var(--green-deep);}
 .stamp.coming_soon{color:var(--amber);}
 .stamp.out_of_stock{color:var(--red);}
+.stamp.advance_order{color:var(--amber);}
 
 .card-body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:6px;flex:1;}
 .sku-row{
@@ -169,6 +170,10 @@ header{
   font-family:'IBM Plex Mono',monospace;font-size:10.5px;
   color:var(--amber);letter-spacing:0.3px;text-transform:uppercase;
   margin-top:2px;
+}
+.delivery-note{
+  font-family:'Inter',sans-serif;font-size:11px;color:var(--ink-soft);
+  margin-top:3px;
 }
 .video-link{
   display:inline-block;font-family:'Inter',sans-serif;font-weight:600;
@@ -350,13 +355,23 @@ const PRODUCTS = [
   { sku:"SB-0048", name:"Grey Carpet Brush", category:"Home Improvement", cartonQty:30, stock:"in_stock", looseAvailable:true,
     image:"grey-carpet-brush.jpg" },
   { sku:"SB-0049", name:"Banana Toothbrush", category:"Baby Products", cartonQty:50, stock:"in_stock", looseAvailable:true,
-    image:"banana-toothbrush.jpg" }
+    image:"banana-toothbrush.jpg" },
+  { sku:"SB-0050", name:"Rectangle Case Umbrella", category:"Rainy Season", cartonQty:60, stock:"advance_order", looseAvailable:false,
+    image:"rectangle-case-umbrella.jpg", deliveryNote:"Advance order only · delivery in 4-5 days" },
+  { sku:"SB-0051", name:"Steel Hanger", category:"Home Improvement", cartonQty:36, unit:"dozen", stock:"in_stock", looseAvailable:false,
+    image:"steel-hanger.jpg" },
+  { sku:"SB-0052", name:"1000ML Motivational Bottle", category:"Home Improvement", cartonQty:60, stock:"in_stock", looseAvailable:false,
+    image:"motivational-bottle-1000ml.jpg" },
+  { sku:"SB-0053", name:"Motivational Bottle Set (3 pcs) - Heavy Quality", category:"Home Improvement", cartonQty:48, stock:"in_stock", looseAvailable:true,
+    image:"motivational-bottle-heavy-3pcs.jpg" },
+  { sku:"SB-0054", name:"Grass Mat", category:"Home Improvement", cartonQty:20, stock:"in_stock", looseAvailable:true,
+    image:"grass-mat.jpg" }
 ];
 
 /* ============================================================
    App logic — no edits usually needed below this line
    ============================================================ */
-const STOCK_LABELS = { in_stock:"In stock", coming_soon:"Coming soon", out_of_stock:"Out of stock" };
+const STOCK_LABELS = { in_stock:"In stock", coming_soon:"Coming soon", out_of_stock:"Out of stock", advance_order:"Advance order" };
 let activeStock = "all";
 let activeCategory = "all";
 let searchTerm = "";
@@ -373,7 +388,7 @@ document.getElementById("igHeaderBtn").href = CONFIG.instagramUrl;
 
 function buildFilters(){
   const stockRow = document.getElementById("stockFilters");
-  const stockOptions = [["all","All stock"],["in_stock","In stock"],["coming_soon","Coming soon"],["out_of_stock","Out of stock"]];
+  const stockOptions = [["all","All stock"],["in_stock","In stock"],["coming_soon","Coming soon"],["advance_order","Advance order"],["out_of_stock","Out of stock"]];
   stockRow.innerHTML = stockOptions.map(([val,label]) =>
     `<button class="chip ${val==='all'?'active':''}" data-stock="${val}">${label}</button>`).join("");
   stockRow.addEventListener("click", e => {
@@ -437,6 +452,9 @@ function render(){
     const saleNote = !cartonOk ? "Loose only · no full carton"
       : p.looseAvailable ? "Available loose &amp; carton · rates differ"
       : "Full carton only";
+    const deliveryNote = p.deliveryNote
+      ? `<p class="delivery-note">${p.deliveryNote}</p>`
+      : "";
     const videoLink = p.videoUrl
       ? `<a class="video-link" href="${p.videoUrl}" target="_blank" rel="noopener">▶ Watch video</a>`
       : "";
@@ -451,6 +469,7 @@ function render(){
         <p class="p-name">${p.name}</p>
         ${moqBox}
         <p class="sale-note">${saleNote}</p>
+        ${deliveryNote}
         ${videoLink}
         <div class="enquire-row">
           ${cartonBtn}
