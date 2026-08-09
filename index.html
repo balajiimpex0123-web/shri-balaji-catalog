@@ -182,6 +182,16 @@ header{
   padding:5px 12px;margin-top:8px;width:fit-content;
 }
 .video-link:hover{background:var(--paper-deep);}
+.share-btn{
+  position:absolute;top:8px;left:8px;z-index:2;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,252,245,0.92);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.15);
+  padding:0;
+}
+.share-btn:hover{background:#fff;}
+.share-btn svg{width:16px;height:16px;display:block;}
 .enquire-row{display:flex;gap:8px;margin-top:10px;}
 .enquire{
   flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
@@ -643,6 +653,9 @@ function render(){
       <div class="card-img">
         <img src="${p.image}" alt="${p.name}" loading="lazy">
         <span class="stamp ${p.stock}">${STOCK_LABELS[p.stock]}</span>
+        <button class="share-btn" type="button" data-share-sku="${p.sku}" title="Share this product" aria-label="Share this product">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+        </button>
       </div>
       <div class="card-body">
         <div class="sku-row"><span>${p.sku}</span><span>${p.category}</span></div>
@@ -658,6 +671,28 @@ function render(){
       </div>
     </div>`;
   }).join("");
+
+  grid.querySelectorAll("[data-share-sku]").forEach(btn => {
+    btn.addEventListener("click", () => shareProduct(btn.dataset.shareSku));
+  });
+}
+
+function shareProduct(sku){
+  const p = PRODUCTS.find(x => x.sku === sku);
+  if (!p) return;
+  const url = `${location.origin}${location.pathname}?product=${encodeURIComponent(p.sku)}`;
+  const shareText = `${p.name} (${p.sku}) \u2014 ${CONFIG.businessName}`;
+  if (navigator.share){
+    navigator.share({ title: p.name, text: shareText, url }).catch(() => {});
+  } else if (navigator.clipboard){
+    navigator.clipboard.writeText(`${shareText}\n${url}`).then(() => {
+      alert("Product link copied \u2014 you can now paste and send it.");
+    }).catch(() => {
+      prompt("Copy this link:", url);
+    });
+  } else {
+    prompt("Copy this link:", url);
+  }
 }
 
 function buildManifest(){
@@ -672,6 +707,14 @@ function buildManifest(){
 
 buildFilters();
 buildManifest();
+
+const sharedSku = new URLSearchParams(location.search).get("product");
+if (sharedSku){
+  searchTerm = sharedSku.toLowerCase();
+  const searchBox = document.getElementById("search");
+  if (searchBox) searchBox.value = sharedSku;
+}
+
 render();
 </script>
 </body>
