@@ -668,6 +668,15 @@ const PRODUCTS = [
    App logic — no edits usually needed below this line
    ============================================================ */
 const STOCK_LABELS = { in_stock:"In stock", coming_soon:"Coming soon", out_of_stock:"Out of stock", advance_order:"Advance order" };
+function shuffleArray(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+const DISPLAY_PRODUCTS = shuffleArray(PRODUCTS); // shuffled once per page load, so listing order isn't always by SKU
 let activeStock = "all";
 let activeCategory = "all";
 let searchTerm = "";
@@ -712,7 +721,7 @@ function buildFilters(){
 }
 
 function render(){
-  const filtered = PRODUCTS.filter(p => {
+  const filtered = DISPLAY_PRODUCTS.filter(p => {
     if (activeStock !== "all" && p.stock !== activeStock) return false;
     if (activeCategory !== "all" && p.category !== activeCategory) return false;
     if (searchTerm && !(p.name.toLowerCase().includes(searchTerm) || p.sku.toLowerCase().includes(searchTerm))) return false;
