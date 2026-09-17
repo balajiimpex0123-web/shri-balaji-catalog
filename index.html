@@ -157,6 +157,14 @@ header{
   background:var(--amber);color:#fff;
   box-shadow:0 1px 3px rgba(0,0,0,0.25);
 }
+.trending-badge{
+  position:absolute;top:10px;left:-6px;
+  font-family:'IBM Plex Mono',monospace;font-weight:700;
+  font-size:10.5px;letter-spacing:0.5px;text-transform:uppercase;
+  padding:4px 12px;border-radius:3px;
+  background:var(--green-deep);color:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,0.25);
+}
 
 .card-body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:6px;flex:1;}
 .sku-row{
@@ -278,7 +286,7 @@ const CONFIG = {
 const PRODUCTS = [
   { sku:"SB-0001", name:"Silicone Bottle Brush", category:"Cleaning", cartonQty:20, stock:"in_stock", looseAvailable:true,
     image:"silicone-bottle-brush.jpg" },
-  { sku:"SB-0002", name:"Shoe Wash Bag", category:"Cleaning", cartonQty:200, stock:"in_stock", looseAvailable:true,
+  { sku:"SB-0002", name:"Shoe Wash Bag", category:"Cleaning", cartonQty:200, stock:"in_stock", looseAvailable:true, trending:true,
     image:"shoe-wash-bag.jpg" },
   { sku:"SB-0003", name:"Gold Plated Small Butterfly Diya Urli", category:"Diwali Items", cartonQty:50, stock:"in_stock", looseAvailable:false,
     image:"butterfly-diya-urli.jpg" },
@@ -336,7 +344,7 @@ const PRODUCTS = [
     image:"silicone-oven-glove.jpg" },
   { sku:"SB-0030", name:"Laxmi Ganesh Wall Hanging", category:"Diwali Items", cartonQty:20, unit:"pairs", stock:"in_stock", looseAvailable:false,
     image:"laxmi-ganesh-wall-hanging.jpg" },
-  { sku:"SB-0031", name:"Car Duster", category:"Cleaning", cartonQty:100, stock:"in_stock", looseAvailable:true,
+  { sku:"SB-0031", name:"Car Duster", category:"Cleaning", cartonQty:100, stock:"in_stock", looseAvailable:true, trending:true,
     image:"car-duster.jpg" },
   { sku:"SB-0032", name:"Orange Creeper Bel", category:"Home Improvement", cartonQty:20, unit:"dozen", stock:"in_stock", looseAvailable:true,
     image:"orange-creeper-bel.jpg" },
@@ -518,7 +526,7 @@ const PRODUCTS = [
     image:"chinese-cloth-brush.jpg", videoUrl:"https://www.instagram.com/reel/DaNcibERhF1/" },
   { sku:"SB-0121", name:"Round Bathroom Mat (Blue)", category:"Home Improvement", cartonQty:100, stock:"in_stock", looseAvailable:true,
     image:"round-mat-blue.jpg" },
-  { sku:"SB-0122", name:"Rain Card", category:"Rainy Season", cartonQty:1000, stock:"in_stock", looseAvailable:true,
+  { sku:"SB-0122", name:"Rain Card", category:"Rainy Season", cartonQty:1000, stock:"in_stock", looseAvailable:true, trending:true,
     image:"rain-card.jpg" },
   { sku:"SB-0123", name:"Sheru Duster", category:"Cleaning", cartonQty:60, stock:"in_stock", looseAvailable:true,
     image:"sheru-duster.jpg" },
@@ -526,7 +534,7 @@ const PRODUCTS = [
     image:"yo-yo-wipes.jpg", videoUrl:"https://www.instagram.com/reel/DaIdfxkPq80/" },
   { sku:"SB-0125", name:"Capsule Umbrella Small", category:"Rainy Season", cartonQty:60, stock:"in_stock", looseAvailable:true,
     image:"capsule-umbrella-small.jpg", videoUrl:"https://www.instagram.com/reel/Dac-VliPAwt/" },
-  { sku:"SB-0126", name:"Bike Face Mask (Heavy Quality)", category:"Home Improvement", cartonQty:100, stock:"in_stock", looseAvailable:true,
+  { sku:"SB-0126", name:"Bike Face Mask (Heavy Quality)", category:"Home Improvement", cartonQty:100, stock:"in_stock", looseAvailable:true, trending:true,
     image:"bike-face-mask.jpg", videoUrl:"https://www.instagram.com/reel/DaX0fqiv1Eq/" },
   { sku:"SB-0127", name:"Round Bathroom Mat (Grey)", category:"Home Improvement", cartonQty:100, stock:"in_stock", looseAvailable:true,
     image:"round-mat-grey.jpg" },
@@ -686,8 +694,9 @@ function shuffleArray(arr){
 }
 const DISPLAY_PRODUCTS = (() => {
   const pinned = PRODUCTS.filter(p => p.bestseller);
-  const rest = shuffleArray(PRODUCTS.filter(p => !p.bestseller));
-  return [...pinned, ...rest]; // bestseller product(s) always shown first, rest shuffled
+  const trending = shuffleArray(PRODUCTS.filter(p => p.trending && !p.bestseller));
+  const rest = shuffleArray(PRODUCTS.filter(p => !p.bestseller && !p.trending));
+  return [...pinned, ...trending, ...rest]; // bestseller first, then trending, rest shuffled
 })();
 let activeStock = "all";
 let activeCategory = "all";
@@ -777,6 +786,8 @@ function render(){
       : "";
     const bestsellerBadge = p.bestseller
       ? `<span class="bestseller-badge">Most Selling</span>`
+      : p.trending
+      ? `<span class="trending-badge">Trending</span>`
       : "";
     return `
     <div class="card">
